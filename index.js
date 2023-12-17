@@ -1,21 +1,17 @@
 const express = require('express');
 const http = require('http');
 const socketIO = require('socket.io');
-const cors = require('cors'); // Add the cors library for CORS configuration
+const cors = require('cors');
 const { Client } = require('pg');
 
 const app = express();
 const server = http.createServer(app);
 const io = socketIO(server);
 
-// Configure CORS
 app.use(cors());
 
-// Use the provided public URL and port
 const PUBLIC_URL = 'https://binding-wini-princemaster400.koyeb.app/';
-const PORT = process.env.PORT || 3000;
-
-// Use the provided private domain for the database URL
+const PORT = process.env.PORT || 8000;
 const DATABASE_URL = 'postgres://collins_user:SpkuLYpAsCW0WdJ0niHg0ZrRKqFtxMs5@server1.binding-wini.koyeb/collins';
 
 const maintenanceStatus = { active: false, startTime: null, stopTime: null };
@@ -45,8 +41,10 @@ io.on('connection', (socket) => {
   });
 });
 
-// Serve the application on the specified port
 server.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
 
+server.on('error', (err) => {
+  console.error('Server error:', err);
+});
